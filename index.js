@@ -16,10 +16,12 @@ mongoose.connect(MONGO_URI)
 
     // Rotalar
     const authRoutes = require('./routes/auth');
-    const offerRoutes = require('./routes/offers');
+const offerRoutes = require('./routes/offers');
+const jobRoutes = require('./routes/jobs');
 
-    app.use('/api/auth', authRoutes);
-    app.use('/api/offers', offerRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/offers', offerRoutes);
+app.use('/api/jobs', jobRoutes);
     // --- KATEGORİLER ENDPOINTLERİ (ADMIN) ---
 const getCategoryModel = () => {
     return mongoose.models.Category || mongoose.model('Category', new mongoose.Schema({}, { strict: false }), 'categories');
