@@ -175,5 +175,21 @@ router.get('/messages/:jobId', async (req, res) => {
 router.post('/messages/send', async (req, res) => {
     res.json({ success: true, message: 'Mesaj gönderildi.' });
 });
+router.get('/provider-profile', async (req, res) => {
+  try {
+    const { phoneNumber } = req.query;
+    const User = require('../models/User');
+    const user = await User.findOne({ phoneNumber });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    res.json({ success: true, data: user });
+  } catch (error) {
+    console.error('Provider profile hatası:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 module.exports = router;
