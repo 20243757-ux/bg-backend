@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'nndiken48@gmail.com',
+    pass: 'vsyv wqxn nadv rkra'
+  }
+});
 
 const otpStore = {};
 
@@ -32,6 +40,12 @@ router.post('/register', async (req, res) => {
         });
 
         await newUser.save();
+        await transporter.sendMail({
+  from: 'nndiken48@gmail.com',
+  to: email,
+  subject: 'Kayıt İşlemi',
+  text: 'Başarıyla kayıt oldunuz!'
+});
 
         res.status(201).json({
             success: true,
