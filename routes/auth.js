@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
+
+const otpStore = {};
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -9,8 +11,6 @@ const transporter = nodemailer.createTransport({
     pass: 'vsyv wqxn nadv rkra'
   }
 });
-
-const otpStore = {};
 
 // 1. Kayıt Ol (Register)
 router.post('/register', async (req, res) => {
@@ -65,22 +65,15 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// 2. SMS Kodu Gönder & Şifre Kontrolü (Login 1. Adım - Esnek Telefon Arama)
+// 2. E-posta Kodu Gönder & Şifre Kontrolü (Login 1. Adım)
 router.post('/send-otp', async (req, res) => {
     try {
-        const { phoneNumber, password } = req.body;
-        const rawPhone = (phoneNumber || '').replace(/\D/g, '');
-        const cleanPhone = rawPhone.replace(/^0+/, '');
+        const { email, password } = req.body;
+        const cleanEmail = (email || '').trim().toLowerCase();
         const cleanPassword = (password || '').trim();
 
-        // Veritabanında numaranın son kısmıyla esnek arama yap (05... veya 5... fark etmeksizin bulur)
-        const user = await User.findOne({
-            $or: [
-                { phoneNumber: cleanPhone },
-                { phoneNumber: rawPhone },
-                { phoneNumber: { $regex: new RegExp(cleanPhone + '$') } }
-            ]
-        });
+        // Veritabanında e-posta ile kullanıcıyı bul
+        const user = await User.findOne({ email: cleanEmail });
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı. Lütfen önce kayıt olun.' });
@@ -90,52 +83,58 @@ router.post('/send-otp', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Şifre hatalı!' });
         }
 
-        // 6 Haneli SMS Kodu Üret
+        // 6 Haneli Doğrulama Kodu Üret
         const code = Math.floor(100000 + Math.random() * 900000).toString();
-        otpStore[user.phoneNumber] = {
+        
+        // OTP store'u e-posta anahtarıyla tutalım
+        otpStore[user.email] = {
             code,
             expiresAt: Date.now() + 5 * 60 * 1000
         };
 
-        console.log(`📲 [SMS GÖNDERİLDİ] Kullanıcı: ${user.fullName} | Kod: ${code}`);
+        // Nodemailer ile E-posta Gönderimi
+        await transporter.sendMail({
+            from: 'nndiken48@gmail.com',
+            to: user.email,
+            subject: 'Giriş Doğrulama Kodunuz',
+            text: `Doğrulama kodunuz: ${code}. Bu kod 5 dakika geçerlidir.`
+        });
+
+        console.log(`📧 [E-POSTA GÖNDERİLDİ] Kullanıcı: ${user.fullName} | Email: ${user.email} | Kod: ${code}`);
 
         res.status(200).json({
             success: true,
-            message: 'SMS doğrulama kodu gönderildi.',
+            message: 'E-posta doğrulama kodu gönderildi.',
             debugCode: code
         });
     } catch (error) {
-        console.error('SMS Hatası:', error);
+        console.error('E-posta Gönderme Hatası:', error);
         res.status(500).json({ success: false, message: `Hata: ${error.message}` });
     }
 });
 
 // 3. SMS Doğrula ve Giriş Yap (Login 2. Adım)
+// 3. E-posta Kodunu Doğrula ve Giriş Yap (Login 2. Adım)
 router.post('/verify-otp', async (req, res) => {
     try {
-        const { phoneNumber, code } = req.body;
-        const rawPhone = (phoneNumber || '').replace(/\D/g, '');
-        const cleanPhone = rawPhone.replace(/^0+/, '');
+        const { email, code } = req.body;
+        const cleanEmail = (email || '').trim().toLowerCase();
 
-        const user = await User.findOne({
-            $or: [
-                { phoneNumber: cleanPhone },
-                { phoneNumber: rawPhone },
-                { phoneNumber: { $regex: new RegExp(cleanPhone + '$') } }
-            ]
-        });
+        // Veritabanında e-posta ile kullanıcıyı bul
+        const user = await User.findOne({ email: cleanEmail });
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
         }
 
-        const record = otpStore[user.phoneNumber];
+        // OTP store'dan e-posta anahtarı ile kaydı kontrol et
+        const record = otpStore[user.email];
         if (!record) {
             return res.status(400).json({ success: false, message: 'Doğrulama kodu bulunamadı veya süresi doldu.' });
         }
 
         if (Date.now() > record.expiresAt) {
-            delete otpStore[user.phoneNumber];
+            delete otpStore[user.email];
             return res.status(400).json({ success: false, message: 'Doğrulama kodunun süresi dolmuş.' });
         }
 
@@ -143,7 +142,8 @@ router.post('/verify-otp', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Girdiğiniz kod hatalı!' });
         }
 
-        delete otpStore[user.phoneNumber];
+        // Kod doğru, kaydı temizle
+        delete otpStore[user.email];
 
         res.status(200).json({
             success: true,
@@ -151,8 +151,7 @@ router.post('/verify-otp', async (req, res) => {
             user: {
                 id: user._id,
                 fullName: user.fullName,
-                phoneNumber: user.phoneNumber,
-                email: user.email || '', // Girişte de e-posta bilgisi dönülüyor
+                email: user.email,
                 role: user.role,
                 categories: user.categories || []
             }
