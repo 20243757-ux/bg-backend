@@ -1,16 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const nodemailer = require('nodemailer');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 587,
-    auth: {
-        user: 'bbaea9001@smtp-brevo.com',
-        pass: 'xsmtpsib-51cb929f9c3c6492f55eaf1b05876e36e58d8c81e70b90e033e03f449264d115-eRtwxzm56M52vA0p'
+// Brevo HTTP API Yapılandırması
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = 'xsmtpsib-51cb929f9c3c6492f55eaf1b05876e36e58d8c81e70b90e033e03f449264d115-eRtwxzm56M52vA0p';
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+// Ortak E-Posta Gönderme Fonksiyonu (HTTP API)
+async function sendEmailViaBrevo(toEmail, toName, subject, textContent) {
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.sender = { email: 'bbaea9001@smtp-brevo.com', name: 'Big Anatolia' };
+    sendSmtpEmail.to = [{ email: toEmail, name: toName || 'Kullanıcı' }];
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.textContent = textContent;
+
+    try {
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
+        console.log(`📧 [BREVO API] E-posta başarıyla gönderildi: ${toEmail}`);
+    } catch (error) {
+        console.error('E-posta Gönderme Hatası:', error);
+        throw error;
     }
-});
+}
 
 // 1. Kayıt Ol (Register)
 router.post('/register', async (req, res) => {
@@ -33,19 +48,17 @@ router.post('/register', async (req, res) => {
         const newUser = new User({
             fullName,
             phoneNumber: cleanPhone,
-            email: email ? email.trim() : '', // E-posta alanı eklendi
+            email: email ? email.trim() : '', 
             password: password.trim(),
             role: role || 'customer',
             categories: Array.isArray(categories) ? categories : []
         });
 
         await newUser.save();
-        await transporter.sendMail({
-  from: 'bbaea9001@smtp-brevo.com',
-  to: email,
-  subject: 'Kayıt İşlemi',
-  text: 'Başarıyla kayıt oldunuz!'
-});
+
+        if (email) {
+            await sendEmailViaBrevo(email, fullName, 'Kayıt İşlemi', 'Başarıyla kayıt oldunuz!');
+        }
 
         res.status(201).json({
             success: true,
@@ -54,7 +67,7 @@ router.post('/register', async (req, res) => {
                 id: newUser._id,
                 fullName: newUser.fullName,
                 phoneNumber: newUser.phoneNumber,
-                email: newUser.email, // Yanıtta da dönüyor
+                email: newUser.email,
                 role: newUser.role,
                 categories: newUser.categories
             }
@@ -66,13 +79,14 @@ router.post('/register', async (req, res) => {
 });
 
 // 2. E-posta Kodu Gönder & Şifre Kontrolü (Login 1. Adım)
+const otpStore = {};
+
 router.post('/send-otp', async (req, res) => {
     try {
         const { email, password } = req.body;
         const cleanEmail = (email || '').trim().toLowerCase();
         const cleanPassword = (password || '').trim();
 
-        // Veritabanında e-posta ile kullanıcıyı bul
         const user = await User.findOne({ email: cleanEmail });
 
         if (!user) {
@@ -83,24 +97,14 @@ router.post('/send-otp', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Şifre hatalı!' });
         }
 
-        // 6 Haneli Doğrulama Kodu Üret
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         
-        // OTP store'u e-posta anahtarıyla tutalım
         otpStore[user.email] = {
             code,
             expiresAt: Date.now() + 5 * 60 * 1000
         };
 
-        // Nodemailer ile E-posta Gönderimi
-        await transporter.sendMail({
-            from: 'bbaea9001@smtp-brevo.com',
-            to: user.email,
-            subject: 'Giriş Doğrulama Kodunuz',
-            text: `Doğrulama kodunuz: ${code}. Bu kod 5 dakika geçerlidir.`
-        });
-
-        console.log(`📧 [E-POSTA GÖNDERİLDİ] Kullanıcı: ${user.fullName} | Email: ${user.email} | Kod: ${code}`);
+        await sendEmailViaBrevo(user.email, user.fullName, 'Giriş Doğrulama Kodunuz', `Doğrulama kodunuz: ${code}. Bu kod 5 dakika geçerlidir.`);
 
         res.status(200).json({
             success: true,
@@ -113,21 +117,18 @@ router.post('/send-otp', async (req, res) => {
     }
 });
 
-// 3. SMS Doğrula ve Giriş Yap (Login 2. Adım)
 // 3. E-posta Kodunu Doğrula ve Giriş Yap (Login 2. Adım)
 router.post('/verify-otp', async (req, res) => {
     try {
         const { email, code } = req.body;
         const cleanEmail = (email || '').trim().toLowerCase();
 
-        // Veritabanında e-posta ile kullanıcıyı bul
         const user = await User.findOne({ email: cleanEmail });
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
         }
 
-        // OTP store'dan e-posta anahtarı ile kaydı kontrol et
         const record = otpStore[user.email];
         if (!record) {
             return res.status(400).json({ success: false, message: 'Doğrulama kodu bulunamadı veya süresi doldu.' });
@@ -142,7 +143,6 @@ router.post('/verify-otp', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Girdiğiniz kod hatalı!' });
         }
 
-        // Kod doğru, kaydı temizle
         delete otpStore[user.email];
 
         res.status(200).json({
