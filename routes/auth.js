@@ -3,13 +3,13 @@ const router = express.Router();
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 
-const otpStore = {};
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'nndiken48@gmail.com',
-    pass: 'vsyvwqxnnadvrkra'
-  }
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    auth: {
+        user: 'bbaea9001@smtp-brevo.com',
+        pass: 'xsmtpsib-51cb929f9c3c6492f55eaf1b05876e36e58d8c81e70b90e033e03f449264d115-eRtwxzm56M52vA0p'
+    }
 });
 
 // 1. Kayıt Ol (Register)
@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
 
         await newUser.save();
         await transporter.sendMail({
-  from: 'nndiken48@gmail.com',
+  from: 'bbaea9001@smtp-brevo.com',
   to: email,
   subject: 'Kayıt İşlemi',
   text: 'Başarıyla kayıt oldunuz!'
@@ -94,7 +94,7 @@ router.post('/send-otp', async (req, res) => {
 
         // Nodemailer ile E-posta Gönderimi
         await transporter.sendMail({
-            from: 'nndiken48@gmail.com',
+            from: 'bbaea9001@smtp-brevo.com',
             to: user.email,
             subject: 'Giriş Doğrulama Kodunuz',
             text: `Doğrulama kodunuz: ${code}. Bu kod 5 dakika geçerlidir.`
