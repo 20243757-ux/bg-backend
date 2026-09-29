@@ -6,7 +6,7 @@ const SibApiV3Sdk = require('sib-api-v3-sdk');
 // Brevo HTTP API Yapılandırması
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = 'xsmtpsib-51cb929f9c3c6492f55eaf1b05876e36e58d8c81e70b90e033e03f449264d115-eRtwxzm56M52vA0p';
+apiKey.apiKey = 'xsmtpsib-51cb929f9c3c6492f55eaf1b05876e36e58d8c81e70b90e033e03f449264d115-Zfvcx7n67jf4PPKf';
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
