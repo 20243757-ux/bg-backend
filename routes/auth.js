@@ -27,42 +27,90 @@ async function sendEmailViaBrevo(toEmail, toName, subject, textContent) {
     }
 }
 
-// 1. Kayıt Ol (Register)
+// Geçici Kayıt OTP Deposu
+const registerOtpStore = {};
+
+// 1. Kayıt Ol (Register - Adım 1: Bilgileri Al ve OTP Gönder)
 router.post('/register', async (req, res) => {
     try {
         const { fullName, phoneNumber, email, password, role, categories } = req.body;
         const cleanPhone = (phoneNumber || '').replace(/\D/g, '').replace(/^0+/, '');
+        const cleanEmail = (email || '').trim().toLowerCase();
 
-        if (!cleanPhone || !password || !fullName) {
-            return res.status(400).json({ success: false, message: 'Lütfen tüm zorunlu alanları doldurun.' });
+        if (!cleanPhone || !password || !fullName || !cleanEmail) {
+            return res.status(400).json({ success: false, message: 'Lütfen tüm zorunlu alanları ve e-postayı doldurun.' });
         }
 
-        const existingUser = await User.findOne({ 
+        const existingUserByPhone = await User.findOne({ 
             phoneNumber: { $regex: new RegExp(cleanPhone + '$') } 
         });
+        const existingUserByEmail = await User.findOne({ email: cleanEmail });
         
-        if (existingUser) {
+        if (existingUserByPhone) {
             return res.status(400).json({ success: false, message: 'Bu telefon numarası ile zaten kayıt olunmuş!' });
         }
+        if (existingUserByEmail) {
+            return res.status(400).json({ success: false, message: 'Bu e-posta adresi ile zaten kayıt olunmuş!' });
+        }
 
-        const newUser = new User({
-            fullName,
-            phoneNumber: cleanPhone,
-            email: email ? email.trim() : '', 
-            password: password.trim(),
-            role: role || 'customer',
-            categories: Array.isArray(categories) ? categories : []
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Kullanıcı bilgilerini geçici olarak sakla, henüz DB'ye kaydetmiyoruz
+        registerOtpStore[cleanEmail] = {
+            code,
+            expiresAt: Date.now() + 5 * 60 * 1000,
+            userData: {
+                fullName,
+                phoneNumber: cleanPhone,
+                email: cleanEmail,
+                password: password.trim(),
+                role: role || 'customer',
+                categories: Array.isArray(categories) ? categories : []
+            }
+        };
+
+        await sendEmailViaBrevo(cleanEmail, fullName, 'Kayıt Doğrulama Kodunuz', `Kayıt doğrulama kodunuz: ${code}. Bu kod 5 dakika geçerlidir.`);
+
+        res.status(200).json({
+            success: true,
+            message: 'Doğrulama kodu e-postanıza gönderildi.',
+            debugCode: code
         });
+    } catch (error) {
+        console.error('Kayıt Başlangıç Hatası:', error);
+        res.status(500).json({ success: false, message: `Hata: ${error.message}` });
+    }
+});
 
+// 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet (Adım 2)
+router.post('/verify-register-otp', async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        const cleanEmail = (email || '').trim().toLowerCase();
+
+        const record = registerOtpStore[cleanEmail];
+        if (!record) {
+            return res.status(400).json({ success: false, message: 'Doğrulama kodu bulunamadı veya süresi doldu.' });
+        }
+
+        if (Date.now() > record.expiresAt) {
+            delete registerOtpStore[cleanEmail];
+            return res.status(400).json({ success: false, message: 'Doğrulama kodunun süresi dolmuş.' });
+        }
+
+        if (record.code !== (code || '').trim()) {
+            return res.status(400).json({ success: false, message: 'Girdiğiniz kod hatalı!' });
+        }
+
+        // Kod doğru! Artık kullanıcıyı veritabanına kaydedebiliriz.
+        const newUser = new User(record.userData);
         await newUser.save();
 
-        if (email) {
-            await sendEmailViaBrevo(email, fullName, 'Kayıt İşlemi', 'Başarıyla kayıt oldunuz!');
-        }
+        delete registerOtpStore[cleanEmail];
 
         res.status(201).json({
             success: true,
-            message: 'Kayıt başarılı!',
+            message: 'Kayıt başarıyla tamamlandı!',
             user: {
                 id: newUser._id,
                 fullName: newUser.fullName,
@@ -73,7 +121,7 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Kayıt Hatası:', error);
+        console.error('Kayıt Doğrulama Hatası:', error);
         res.status(500).json({ success: false, message: `Hata: ${error.message}` });
     }
 });
