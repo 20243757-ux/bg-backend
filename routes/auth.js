@@ -13,7 +13,7 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // Ortak E-Posta Gönderme Fonksiyonu (HTTP API)
 async function sendEmailViaBrevo(toEmail, toName, subject, textContent) {
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { email: 'bbaea9001@smtp-brevo.com', name: 'Big Anatolia' };
+    sendSmtpEmail.sender = { email: 'babacinar061@gmail.com', name: 'Big Anatolia' };
     sendSmtpEmail.to = [{ email: toEmail, name: toName || 'Kullanıcı' }];
     sendSmtpEmail.subject = subject;
     sendSmtpEmail.textContent = textContent;
