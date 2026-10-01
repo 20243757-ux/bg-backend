@@ -83,47 +83,48 @@ router.post('/register', async (req, res) => {
 });
 
 // 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet (Adım 2)
+// 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet
 router.post('/verify-register-otp', async (req, res) => {
-    try {
-        const { email, code } = req.body;
-        const cleanEmail = (email || '').trim().toLowerCase();
+  try {
+    const { email, code } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
 
-        const record = registerOtpStore[cleanEmail];
-        if (!record) {
-            return res.status(400).json({ success: false, message: 'Doğrulama kodu bulunamadı veya süresi doldu.' });
-        }
-
-        if (Date.now() > record.expiresAt) {
-            delete registerOtpStore[cleanEmail];
-            return res.status(400).json({ success: false, message: 'Doğrulama kodunun süresi dolmuş.' });
-        }
-
-        if (record.code !== (code || '').trim()) {
-            return res.status(400).json({ success: false, message: 'Girdiğiniz kod hatalı!' });
-        }
-
-        // Kod doğru! Artık kullanıcıyı veritabanına kaydedebiliriz.
-        const newUser = new User(record.userData);
-        await newUser.save();
-
-        delete registerOtpStore[cleanEmail];
-
-        res.status(201).json({
-            success: true,
-            message: 'Kayıt başarıyla tamamlandı!',
-            user: {
-                id: newUser._id,
-                fullName: newUser.fullName,
-                phoneNumber: newUser.phoneNumber,
-                email: newUser.email,
-                role: newUser.role,
-                categories: newUser.categories
-            }
-        });
-    } catch (error) {
-        console.error('Kayıt Doğrulama Hatası:', error);
-        res.status(500).json({ success: false, message: `Hata: ${error.message}` });
+    const record = registerOtpStore[cleanEmail];
+    if (!record) {
+      return res.status(400).json({ success: false, message: 'Doğrulama kodu bulunamadı veya süresi doldu.' });
     }
+    if (Date.now() > record.expiresAt) {
+      delete registerOtpStore[cleanEmail];
+      return res.status(400).json({ success: false, message: 'Doğrulama kodunun süresi dolmuş.' });
+    }
+
+    // KRİTİK KONTROL BURASI: Girilen kod ile saklanan kod eşleşiyor mu?
+    if (String(record.code).trim() !== String(code).trim()) {
+      return res.status(400).json({ success: false, message: 'Girdiğiniz kod hatalı.' });
+    }
+
+    // Kod doğru! Artık kullanıcıyı veritabanına kaydedebiliriz.
+    const newUser = new User(record.userData);
+    await newUser.save();
+
+    delete registerOtpStore[cleanEmail];
+
+    res.status(201).json({
+      success: true,
+      message: 'Kayıt başarıyla tamamlandı.',
+      user: {
+        id: newUser._id,
+        fullName: newUser.fullName,
+        phoneNumber: newUser.phoneNumber,
+        email: newUser.email,
+        role: newUser.role,
+        categories: newUser.categories
+      }
+    });
+  } catch (error) {
+    console.error('Kayıt Doğrulama Hatası:', error);
+    res.status(500).json({ success: false, message: `Hata: ${error.message}` });
+  }
 });
 
 // 2. E-posta Kodu Gönder & Şifre Kontrolü (Login 1. Adım)
