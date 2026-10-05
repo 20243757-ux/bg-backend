@@ -84,6 +84,7 @@ router.post('/register', async (req, res) => {
 
 // 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet (Adım 2)
 // 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet
+// 1.5. Kayıt OTP Kodunu Doğrula ve Kullanıcıyı Veritabanına Kaydet
 router.post('/verify-register-otp', async (req, res) => {
   try {
     const { email, code } = req.body;
