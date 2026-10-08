@@ -34,29 +34,29 @@ const registerOtpStore = {};
 router.post('/register', async (req, res) => {
     try {
         const { fullName, phoneNumber, email, password, role, categories } = req.body;
-        const cleanPhone = (phoneNumber || '').replace(/\D/g, '').replace(/^0+/, '');
+       const cleanPhone = (phoneNumber || '').replace(/\D/g, '').replace(/^0+/, '');
         const cleanEmail = (email || '').trim().toLowerCase();
 
-        if (!cleanPhone || !password || !fullName || !cleanEmail) {
-            return res.status(400).json({ success: false, message: 'Lütfen tüm zorunlu alanları ve e-postayı doldurun.' });
+        // Buraya ekliyoruz:
+        if (cleanPhone.length !== 11) {
+            return res.status(400).json({ success: false, message: 'Telefon numarası eksik veya hatalı! Lütfen başında 0 olacak şekilde 11 hane giriniz.' });
         }
 
         const existingUserByPhone = await User.findOne({ 
             phoneNumber: { $regex: new RegExp(cleanPhone + '$') } 
         });
-       const existingUserByEmail = await User.findOne({ 
+        const existingUserByEmail = await User.findOne({ 
     email: { $regex: new RegExp('^' + cleanEmail + '$', 'i') } 
 });
-        // DÜZELTME BURASI: otpStore yerine registerOtpStore kontrol edilmeli
-        if (registerOtpStore[cleanEmail]) {
-            return res.status(400).json({ success: false, message: 'Bu e-posta adresi için halihazırda bekleyen bir doğrulama kodu var!' });
-        }
-        
+
         if (existingUserByPhone) {
             return res.status(400).json({ success: false, message: 'Bu telefon numarası ile zaten kayıt olunmuş!' });
         }
         if (existingUserByEmail) {
             return res.status(400).json({ success: false, message: 'Bu e-posta adresi ile zaten kayıt olunmuş!' });
+        }
+        if (registerOtpStore[cleanEmail]) {
+            return res.status(400).json({ success: false, message: 'Bu e-posta adresi için halihazırda bekleyen bir doğrulama kodu var!' });
         }
 
         const code = Math.floor(100000 + Math.random() * 900000).toString();
