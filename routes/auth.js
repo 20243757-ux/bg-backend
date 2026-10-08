@@ -44,8 +44,9 @@ router.post('/register', async (req, res) => {
         const existingUserByPhone = await User.findOne({ 
             phoneNumber: { $regex: new RegExp(cleanPhone + '$') } 
         });
-        const existingUserByEmail = await User.findOne({ email: cleanEmail });
-
+       const existingUserByEmail = await User.findOne({ 
+    email: { $regex: new RegExp('^' + cleanEmail + '$', 'i') } 
+});
         // DÜZELTME BURASI: otpStore yerine registerOtpStore kontrol edilmeli
         if (registerOtpStore[cleanEmail]) {
             return res.status(400).json({ success: false, message: 'Bu e-posta adresi için halihazırda bekleyen bir doğrulama kodu var!' });
