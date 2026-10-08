@@ -46,9 +46,10 @@ router.post('/register', async (req, res) => {
         });
         const existingUserByEmail = await User.findOne({ email: cleanEmail });
 
-        if (otpStore[cleanEmail]) {
-        return res.status(400).json({ success: false, message: 'Bu e-posta adresi için halihazırda bekleyen bir doğrulama kodu var!' });
-    }
+        // DÜZELTME BURASI: otpStore yerine registerOtpStore kontrol edilmeli
+        if (registerOtpStore[cleanEmail]) {
+            return res.status(400).json({ success: false, message: 'Bu e-posta adresi için halihazırda bekleyen bir doğrulama kodu var!' });
+        }
         
         if (existingUserByPhone) {
             return res.status(400).json({ success: false, message: 'Bu telefon numarası ile zaten kayıt olunmuş!' });
