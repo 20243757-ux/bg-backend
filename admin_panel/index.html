@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HizmetBirleştir — Admin Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Sol Üst Sabit Logo ve Başlık Alanı -->
+<header class="app-header">
+  <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
+  <span class="app-title">bizgeliyoruz</span>
+</header>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">HB</div>
+      <div><strong>HizmetBirleştir</strong><span>Admin Paneli</span></div>
+    </div>
+
+    <nav>
+      <div class="nav-label">GENEL</div>
+      <a class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</a>
+
+      <div class="nav-label">YÖNETİM</div>
+      <a class="nav-item" data-page="users"><span>♙</span> Kullanıcılar <b>22</b></a>
+      <a class="nav-item" data-page="providers"><span>▣</span> Hizmet Verenler <b>16</b></a>
+      <a class="nav-item" data-page="customers"><span>♙</span> Hizmet Alanlar</a>
+      <a class="nav-item" data-page="services"><span>◈</span> Hizmetler</a>
+      <a class="nav-item" data-page="categories"><span>📂</span> Kategoriler</a>
+      <a class="nav-item" data-page="payments"><span>₺</span> Ödemeler</a>
+      <a class="nav-item" data-page="reviews"><span>★</span> Yorumlar & Puanlar</a>
+
+      <div class="nav-label">İÇERİK</div>
+      <a class="nav-item" data-page="banners"><span>▰</span> Banner Yönetimi</a>
+
+      <div class="nav-label">SİSTEM</div>
+      <a class="nav-item" data-page="settings"><span>⚙</span> Ayarlar</a>
+      <a class="nav-item" data-page="logs"><span>≡</span> Sistem Logları</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
+      <div class="breadcrumb"><span id="pageTitle">Dashboard</span><small> / Genel Bakış</small></div>
+      <div class="top-actions">
+        <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
+        <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
+        <button class="icon-btn">⛶</button>
+        <div class="profile">
+          <div class="avatar">BG</div>
+          <div><strong>Admin</strong><small>Yönetici</small></div>
+          <span>⌄</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div id="dashboardPage">
+        <div class="welcome">
+          <div><h1>Günaydın, Admin 👋</h1><p>Platformun bugünkü durumuna genel bakış.</p></div>
+          <button class="primary" id="newServiceBtn">＋ Yeni Hizmet</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card"><div class="stat-icon purple">♙</div><div><span>Toplam Kullanıcı</span><strong>12.845</strong><em>↗ 12.5%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon blue">▣</div><div><span>Hizmet Veren</span><strong>3.672</strong><em>↗ 8.3%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon green">♙</div><div><span>Hizmet Alan</span><strong>9.173</strong><em>↗ 14.2%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon orange">🛒</div><div><span>Toplam Sipariş</span><strong>18.392</strong><em>↗ 16.7%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon violet">₺</div><div><span>Toplam Gelir</span><strong>₺1.245.780</strong><em>↗ 22.4%</em><small>Geçen aya göre</small></div></div>
+          
+          <!-- Yeni Eklenen: Alınan Komisyon (%20) -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">💰</div>
+            <div><span>Alınan Komisyon (%20)</span><strong id="totalCommissionText">₺0</strong><em>Sabit Oran</em><small>Platform kazancı</small></div>
+          </div>
+
+          <!-- Yeni Eklenen: Toplam Gider (Ustaya) -->
+          <div class="stat-card">
+            <!-- Yeni Hali -->
+<div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
+            <div><span>Toplam Gider (Ustaya)</span><strong id="totalExpenseText">₺0</strong><em>Aktarılan</em><small>Usta ödemeleri</small></div>
+          </div>
+        </div>
+
+        <div class="grid-main">
+          <div class="panel chart-panel">
+            <div class="panel-head"><div><h3>Sipariş / Talep İstatistikleri</h3><p>Son 30 günlük performans</p></div><select><option>Son 30 Gün</option><option>Son 7 Gün</option><option>Bu Yıl</option></select></div>
+            <div class="legend"><span><i class="dot purple-dot"></i>Sipariş Sayısı</span><span><i class="dot green-dot"></i>Tamamlanan Sipariş</span></div>
+            <div class="chart"><div class="ylabels"><span>1.000</span><span>800</span><span>600</span><span>400</span><span>200</span><span>0</span></div><div class="chart-area">
+              <div class="grid-lines"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <svg viewBox="0 0 760 280" preserveAspectRatio="none" aria-label="Sipariş grafiği">
+                <polyline class="line purple-line" points="0,155 55,160 110,130 165,145 220,170 275,120 330,105 385,115 440,90 495,120 550,120 605,70 660,95 710,82 760,60"/>
+                <polyline class="line green-line" points="0,205 55,195 110,195 165,165 220,175 275,155 330,125 385,160 440,135 495,155 550,150 605,120 660,145 710,130 760,105"/>
+              </svg>
+              <div class="xlabels"><span>5 Ağu</span><span>10 Ağu</span><span>15 Ağu</span><span>20 Ağu</span><span>25 Ağu</span><span>30 Ağu</span><span>Bugün</span></div>
+            </div></div>
+          </div>
+
+          <div class="panel category-panel">
+            <div class="panel-head"><div><h3>Kategorilere Göre Dağılım</h3><p>Aktif hizmetlerin dağılımı</p></div></div>
+            <div class="donut-wrap"><div class="donut"></div><div class="cat-list">
+              <div><i class="c1"></i>Temizlik <b>25%</b></div><div><i class="c2"></i>Tadilat & Onarım <b>18%</b></div><div><i class="c3"></i>Taşımacılık <b>15%</b></div><div><i class="c4"></i>Özel Ders <b>12%</b></div><div><i class="c5"></i>Organizasyon <b>8%</b></div><div><i class="c6"></i>Diğer <b>22%</b></div>
+            </div></div>
+          </div>
+
+          <div class="side-stack">
+            <div class="panel quick"><div class="panel-head"><h3>Hızlı İşlemler</h3></div>
+              <button>＋ <span>Yeni Hizmet Ekle</span> ›</button><button>♧ <span>Yeni Duyuru Yayınla</span> ›</button><button>♙ <span>Kullanıcı Ekle</span> ›</button><button>▣ <span>Banner Ekle</span> ›</button>
+            </div>
+            <div class="panel system"><div class="panel-head"><h3>Sistem Durumu</h3><span class="online">● Çevrimiçi</span></div>
+              <div class="system-row">◉ Sunucu Durumu <b>Çevrimiçi ✓</b></div><div class="system-row">▤ Veritabanı <b>Çevrimiçi ✓</b></div><div class="system-row">✉ Mail Servisi <b>Çevrimiçi ✓</b></div><div class="storage"><span>Depolama Alanı</span><b>256 GB / 1 TB</b><div><i></i></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel table-panel">
+          <div class="panel-head"><div><h3>Son Siparişler / Talepler</h3><p>Platformdaki son hareketler</p></div><button class="ghost" id="allOrders">Tümünü Gör →</button></div>
+          <div class="table-wrap"><table id="ordersTable"><thead><tr><th>#</th><th>Müşteri</th><th>Hizmet</th><th>Tutar</th><th>Durum</th><th>Tarih</th><th>İşlem</th></tr></thead>
+          <tbody>
+            <tr><td>#18291</td><td><div class="person"><div class="mini-avatar">AY</div><span>Ayşe Yılmaz<small>ayseyilmaz@mail.com</small></span></div></td><td>Ev Temizliği<small>Genel Temizlik</small></td><td><b>₺750,00</b></td><td><label class="badge success">Tamamlandı</label></td><td>02.09.2026<small>10:30</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18290</td><td><div class="person"><div class="mini-avatar">MD</div><span>Mehmet Demir<small>mehmetdemir@mail.com</small></span></div></td><td>Elektrik Tesisatı<small>Priz Montajı</small></td><td><b>₺450,00</b></td><td><label class="badge info">Onaylandı</label></td><td>02.09.2026<small>09:15</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18289</td><td><div class="person"><div class="mini-avatar">ZK</div><span>Zeynep Kaya<small>zeynepkaya@mail.com</small></span></div></td><td>Özel Ders<small>Matematik</small></td><td><b>₺600,00</b></td><td><label class="badge warning">Beklemede</label></td><td>01.09.2026<small>16:45</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18288</td><td><div class="person"><div class="mini-avatar">AÇ</div><span>Ali Çelik<small>alicelik@mail.com</small></span></div></td><td>Eşya Taşıma<small>Şehir İçi Nakliye</small></td><td><b>₺1.200,00</b></td><td><label class="badge danger">İptal Edildi</label></td><td>01.09.2026<small>11:20</small></td><td><button class="view">◉</button></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <div id="genericPage" class="generic-page hidden">
+        <div class="welcome"><div><h1 id="genericTitle">Kullanıcılar</h1><p id="genericDesc">Platform yönetimi.</p></div><button class="primary">＋ Yeni Kayıt</button></div>
+        <div class="panel"><div class="panel-head"><h3 id="genericHeading">Kayıtlar</h3><div class="filters"><input placeholder="Filtrele..." /><button class="ghost">Filtrele</button></div></div>
+          <div class="empty-state"><div>◈</div><h2>Yönetim ekranı hazır</h2><p>Bu bölüm için veri tabanı bağlantısı yapıldığında kayıtlar, filtreler, arama ve detay ekranları burada çalışacaktır.</p><button class="primary" id="backDashboard">Dashboard'a Dön</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
+  <script src="app.js?v=2.0"></script>
+</body>
+</html>
