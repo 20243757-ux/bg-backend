@@ -34,13 +34,13 @@ const registerOtpStore = {};
 router.post('/register', async (req, res) => {
     try {
         const { fullName, phoneNumber, email, password, role, categories } = req.body;
-       const cleanPhone = (phoneNumber || '').replace(/\D/g, '').replace(/^0+/, '');
+       const cleanPhone = phoneNumber ? phoneNumber.replace(/\D/g, '') : '';
         const cleanEmail = (email || '').trim().toLowerCase();
 
         // Buraya ekliyoruz:
-        if (cleanPhone.length !== 11) {
-            return res.status(400).json({ success: false, message: 'Telefon numarası eksik veya hatalı! Lütfen başında 0 olacak şekilde 11 hane giriniz.' });
-        }
+       if (cleanPhone.length !== 11 || !cleanPhone.startsWith('0')) {
+  return res.status(400).json({ success: false, message: 'Telefon numarası eksik veya hatalı! Lütfen başında 0 olacak şekilde 11 hane giriniz.' });
+}
 
         const existingUserByPhone = await User.findOne({ 
             phoneNumber: { $regex: new RegExp(cleanPhone + '$') } 
