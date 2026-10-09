@@ -94,7 +94,7 @@ navItems.forEach(item => {
 
 async function fetchDashboardStats() {
   try {
-    const response = await fetch('http://localhost:5000/api/admin/stats');
+    const response = await fetch('https://bizgeliyoruz.com/api/admin/stats');
     const data = await response.json();
     if (data.success && data.stats) {
       const statCards = document.querySelectorAll('.stat-card');
@@ -123,7 +123,7 @@ if (menuBtn) {
 fetchDashboardStats();
 async function loadLogsData() {
   try {
-    const response = await fetch('http://localhost:5000/api/admin/Logs');
+    const response = await fetch('https://bizgeliyoruz.com/api/admin/Logs');
     const result = await response.json();
 
     if (result.success) {
