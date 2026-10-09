@@ -94,7 +94,7 @@ navItems.forEach(item => {
 
 async function fetchDashboardStats() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/stats');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/stats');
     const data = await response.json();
     if (data.success && data.stats) {
       const statCards = document.querySelectorAll('.stat-card');
@@ -123,7 +123,7 @@ if (menuBtn) {
 fetchDashboardStats();
 async function loadLogsData() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/Logs');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/Logs');
     const result = await response.json();
 
     if (result.success) {
@@ -233,7 +233,7 @@ let allPaymentSummaries = [];
 
 async function fetchPaymentsSummary() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/payments-summary');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/payments-summary');
     const result = await response.json();
     if (result.success) {
       allPaymentSummaries = result.data;
@@ -379,7 +379,7 @@ async function loadCategoriesData() {
 
 async function fetchCategories() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/categories');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/categories');
     const result = await response.json();
     const container = document.getElementById('categoriesListContainer');
     
@@ -409,7 +409,7 @@ async function addNewCategoryPrompt() {
   const subCategories = subCategoriesStr ? subCategoriesStr.split(',').map(s => s.trim()) : [];
 
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/categories', {
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, subCategories })
@@ -429,7 +429,7 @@ async function addNewCategoryPrompt() {
 async function deleteCategory(id) {
   if (!confirm('Bu kategoriyi silmek istediğinize emin misiniz?')) return;
   try {
-    const response = await fetch(`https://bizgeliyoruz.com/api/admin/categories/${id}`, {
+    const response = await fetch(`https://bg-backend-2.onrender.com/api/admin/categories/${id}`, {
       method: 'DELETE'
     });
     const result = await response.json();
@@ -446,7 +446,7 @@ async function deleteCategory(id) {
 // --- YORUMLAR & PUANLAR TABLOSU ---
 async function loadReviewsData() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/reviews');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/reviews');
     const result = await response.json();
     
     if (result.success || Array.isArray(result.data)) {
@@ -518,7 +518,7 @@ async function loadReviewsData() {
 // --- HİZMETLER TABLOSU ---
 async function loadServicesData() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/jobs');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/jobs');
     const result = await response.json();
     if (result.success || Array.isArray(result.data)) {
       const jobs = result.data || result || [];
@@ -569,7 +569,7 @@ async function loadServicesData() {
 // --- KULLANICILAR TABLOSU ---
 async function loadUsersData(type) {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/users');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/users');
     const result = await response.json();
     if (result.success) {
       let users = result.data;
@@ -620,7 +620,7 @@ async function loadUsersData(type) {
 // --- BANNER YÖNETİMİ TABLOSU & İŞLEMLERİ ---
 async function loadBannersData() {
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/banners');
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/banners');
     const result = await response.json();
     
     if (result.success || Array.isArray(result.data)) {
@@ -691,7 +691,7 @@ async function openBannerModal() {
   const link = prompt("Yönlendirme Linki (Opsiyonel):", "#");
 
   try {
-    const response = await fetch('https://bizgeliyoruz.com/api/admin/banners', {
+    const response = await fetch('https://bg-backend-2.onrender.com/api/admin/banners', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, imageUrl, link })
@@ -711,7 +711,7 @@ async function openBannerModal() {
 async function deleteBanner(id) {
   if (!confirm("Bu banner'ı silmek istediğinize emin misiniz?")) return;
   try {
-    const response = await fetch(`https://bizgeliyoruz.com/api/admin/banners/${id}`, {
+    const response = await fetch(`https://bg-backend-2.onrender.com/api/admin/banners/${id}`, {
       method: 'DELETE'
     });
     const result = await response.json();
