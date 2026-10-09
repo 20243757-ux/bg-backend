@@ -455,7 +455,7 @@ app.get('/api/admin/payments-summary', async (req, res) => {
     app.get('/api/admin/users', async (req, res) => {
       try {
         const User = require('./models/User');
-        const users = await User.find().select('-password').sort({ createdAt: -1 });
+        const users = await User.find().sort({ createdAt: -1 });
         res.json({ success: true, data: users });
       } catch (error) {
         console.error("Admin users hatası:", error.message);
