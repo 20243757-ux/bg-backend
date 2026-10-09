@@ -265,42 +265,62 @@ app.delete('/api/admin/categories/:id', async (req, res) => {
 
     // --- ADMIN İSTATİSTİK ENDPOINT'İ (%20 Komisyon ve Gider Eklendi) ---
     app.get('/api/admin/stats', async (req, res) => {
-  try {
-    const User = require('./models/User');
-    let Job;
-    try { Job = require('./models/Job'); } catch(e) { Job = require('./models/Jobs'); }
+      try {
+        let totalUsers = 0;
+        let totalProviders = 0;
+        let totalCustomers = 0;
+        let totalJobs = 0;
+        let totalRevenue = 0;
 
-    const totalUsers = await User.countDocuments() || 0;
-    const totalProviders = await User.countDocuments({ role: { $regex: /provider|usta|hizmetveren/i } }) || 0;
-    const totalCustomers = await User.countDocuments({ role: { $regex: /customer|musteri|hizmetalan|user/i } }) || 0;
-    const totalJobs = Job ? await Job.countDocuments() : 0;
+        // Kullanıcı sayımları
+        try {
+          const User = require('./models/User');
+          totalUsers = await User.countDocuments();
+          totalProviders = await User.countDocuments({ role: 'provider' }).catch(() => 0);
+          totalCustomers = await User.countDocuments({ role: 'customer' }).catch(() => 0);
+        } catch (e) {
+          console.log("User modeli hatası:", e.message);
+        }
 
-    let totalRevenue = 0;
-    if (Job) {
-      const jobs = await Job.find({ status: { $regex: /tamamlandi|completed/i } });
-      jobs.forEach(j => { totalRevenue += Number(j.price || j.amount || 1500); });
-    }
+        // İş / Sipariş ve Gelir sayımları
+        try {
+          const Job = mongoose.models.Job || mongoose.model('Job', new mongoose.Schema({}, { strict: false }), 'jobs'); 
+          
+          const allJobs = await Job.find();
+          totalJobs = allJobs.length;
 
-    const totalCommission = totalRevenue * 0.20;
-    const totalExpense = 0;
+          allJobs.forEach(job => {
+            const price = job.fixedPrice || job.price || job.tutar || job.fiyat || 1500;
+            totalRevenue += Number(price);
+          });
+        } catch (e) {
+          console.log("Job modeli hatası:", e.message);
+        }
 
-    res.json({
-      success: true,
-      stats: {
-        totalUsers,
-        totalProviders,
-        totalCustomers,
-        totalJobs,
-        totalRevenue,
-        totalCommission,
-        totalExpense
+        // %20 Komisyon ve Ustaya Gidecek Tutar (Gider) Hesaplamaları
+        const totalCommission = totalRevenue * 0.20; // Senin kazancın (%20)
+        const totalExpense = totalRevenue - totalCommission; // Ustaya aktarılacak tutar (%80)
+
+        res.json({
+          success: true,
+          stats: {
+            totalUsers: totalUsers,
+            totalProviders: totalProviders,
+            totalCustomers: totalCustomers,
+            totalJobs: totalJobs,
+            completedJobs: totalJobs,
+            totalRevenue: totalRevenue,
+            totalCommission: totalCommission, // Yeni: Alınan Komisyon (%20)
+            totalExpense: totalExpense,       // Yeni: Toplam Gider (Ustaya giden)
+            pendingPoolAmount: totalExpense
+          }
+        });
+      } catch (error) {
+        console.error("Genel stats hatası:", error.message);
+        res.status(500).json({ success: false, message: error.message });
       }
     });
-  } catch (error) {
-    console.error("İstatistikler alınırken hata:", error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+
     // --- TÜM SİPARİŞLERİ / İŞLERİ LİSTELEME ENDPOINTİ (Hatasız Çözüm) ---
     app.get('/api/admin/jobs', async (req, res) => {
       try {
@@ -435,7 +455,7 @@ app.get('/api/admin/payments-summary', async (req, res) => {
     app.get('/api/admin/users', async (req, res) => {
       try {
         const User = require('./models/User');
-       const users = await User.find().sort({ createdAt: -1 });
+        const users = await User.find().select('-password').sort({ createdAt: -1 });
         res.json({ success: true, data: users });
       } catch (error) {
         console.error("Admin users hatası:", error.message);
