@@ -10,6 +10,26 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Giriş Ekranı -->
+<div id="loginScreen" style="display: none; position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
+    <div style="background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="width: 50px; height: 50px; background: linear-gradient(135deg,#6d4aff,#8f6cff); border-radius: 14px; margin: 0 auto 15px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;">HB</div>
+            <h2 style="margin: 0; font-size: 20px; color: #172033;">Yönetici Girişi</h2>
+            <p style="margin: 5px 0 0; font-size: 12px; color: #8ea0c3;">BizGeliyoruz Yönetim Paneli</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">E-posta</label>
+            <input type="email" id="loginEmail" placeholder="admin@bizgeliyoruz.com" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">Şifre</label>
+            <input type="password" id="loginPassword" placeholder="******" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
+        </div>
+        <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
+        <p id="loginError" style="color: #ef4f62; font-size: 11px; text-align: center; margin-top: 15px; display: none;">Hatalı e-posta veya şifre!</p>
+    </div>
+</div>
   <!-- Sol Üst Sabit Logo ve Başlık Alanı -->
 <header class="app-header">
   <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
@@ -51,13 +71,17 @@
         <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
         <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
         <button class="icon-btn">⛶</button>
-        <div class="profile">
-          <div class="avatar">BG</div>
-          <div><strong>Admin</strong><small>Yönetici</small></div>
-          <span>⌄</span>
-        </div>
-      </div>
-    </header>
+      <div class="profile" style="cursor: pointer; position: relative;" onclick="toggleProfileMenu()">
+    <div class="avatar">BG</div>
+    <div>
+        <strong>Admin</strong>
+        <small>Yönetici</small>
+    </div>
+    <!-- Çıkış Menüsü -->
+    <div id="profileDropdown" style="display: none; position: absolute; top: 45px; right: 0; background: #fff; border: 1px solid #edf0f5; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 130px; z-index: 1000;">
+        <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
+    </div>
+</div>
 
     <section class="content">
       <div id="dashboardPage">
