@@ -807,3 +807,50 @@ async function loadPaymentsData() {
     fetchPaymentsSummary();
   }
 }
+function toggleProfileMenu() {
+    const menu = document.getElementById('profileDropdown');
+    if (menu) {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+}
+
+function adminLogout() {
+    localStorage.removeItem('isAdminLoggedIn');
+    location.reload();
+}
+
+window.onclick = function(event) {
+    if (!event.target.closest('.profile')) {
+        const menu = document.getElementById('profileDropdown');
+        if (menu) menu.style.display = 'none';
+    }
+}
+// Giriş Kontrolü ve Sabit Hesap Doğrulama
+function checkAuth() {
+    const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+    const loginScreen = document.getElementById('loginScreen');
+    if (loginScreen) {
+        loginScreen.style.display = isLoggedIn === 'true' ? 'none' : 'flex';
+    }
+}
+
+function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value.trim();
+    const errorText = document.getElementById('loginError');
+
+    // Sabit hesap bilgileri
+    if (email === 'admin@bizgeliyoruz.com' && pass === '123456') {
+        localStorage.setItem('isAdminLoggedIn', 'true');
+        checkAuth();
+    } else {
+        if (errorText) errorText.style.display = 'block';
+    }
+}
+
+// Sayfa açıldığında yetkiyi kontrol et
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+});
+// Alternatif olarak hemen çalıştır:
+checkAuth();
