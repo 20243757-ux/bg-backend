@@ -71,16 +71,16 @@
         <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
         <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
         <button class="icon-btn">⛶</button>
-      <div class="profile" style="cursor: pointer; position: relative;" onclick="toggleProfileMenu()">
+    <div class="profile" style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 99999;">
     <div class="avatar">BG</div>
     <div>
         <strong>Admin</strong>
         <small>Yönetici</small>
     </div>
-    <!-- Çıkış Menüsü -->
-    <div id="profileDropdown" style="display: none; position: absolute; top: 45px; right: 0; background: #fff; border: 1px solid #edf0f5; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 130px; z-index: 1000;">
-        <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
-    </div>
+    <!-- Doğrudan Tıklanabilir Çıkış Butonu -->
+    <button type="button" onclick="adminLogout()" style="background: #ef4f62; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; margin-left: 10px; box-shadow: 0 2px 5px rgba(239,79,98,0.3);">
+        Çıkış Yap
+    </button>
 </div>
 
     <section class="content">
