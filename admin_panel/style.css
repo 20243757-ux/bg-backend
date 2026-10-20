@@ -1,799 +1,169 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: #f6f8fc;
-  color: #172033;
-  font-size: 14px;
-}
-
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 245px;
-  height: 100vh;
-  background: #0d1a35;
-  color: #dce5f7;
-  padding: 18px 12px;
-  overflow: auto;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 8px 12px 22px;
-}
-
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #6d4aff, #8f6cff);
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-weight: 800;
-}
-
-.brand strong {
-  display: block;
-  color: #fff;
-  font-size: 15px;
-}
-
-.brand span {
-  display: block;
-  color: #8ea0c3;
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.nav-label {
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  color: #7183a7;
-  font-weight: 700;
-  padding: 15px 12px 7px;
-}
-
-.nav-item {
-  height: 39px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 12px;
-  border-radius: 9px;
-  color: #bac7de;
-  text-decoration: none;
-  cursor: pointer;
-  margin: 2px 0;
-}
-
-.nav-item span {
-  width: 18px;
-  text-align: center;
-  font-size: 16px;
-}
-
-.nav-item b {
-  margin-left: auto;
-  font-size: 10px;
-  background: #263657;
-  padding: 3px 6px;
-  border-radius: 10px;
-  color: #9fb0d0;
-}
-
-.nav-item:hover {
-  background: #172747;
-  color: #fff;
-}
-
-.nav-item.active {
-  background: linear-gradient(90deg, #6b4cff, #7655ef);
-  color: #fff;
-  box-shadow: 0 7px 20px #6044e833;
-}
-
-.main {
-  margin-left: 245px;
-  min-height: 100vh;
-}
-
-.topbar {
-  height: 74px;
-  background: #fff;
-  border-bottom: 1px solid #e8ecf3;
-  display: flex;
-  align-items: center;
-  padding: 0 27px;
-  gap: 25px;
-}
-
-.breadcrumb {
-  font-size: 17px;
-  font-weight: 750;
-  min-width: 210px;
-}
-
-.breadcrumb small {
-  font-size: 11px;
-  color: #8b95a8;
-  font-weight: 500;
-}
-
-.top-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.search {
-  height: 38px;
-  width: 330px;
-  background: #f5f7fb;
-  border: 1px solid #edf0f6;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  color: #8490a5;
-}
-
-.search input {
-  border: 0;
-  outline: 0;
-  background: none;
-  width: 100%;
-  padding-left: 8px;
-}
-
-.icon-btn {
-  width: 37px;
-  height: 37px;
-  border: 0;
-  background: #f6f8fb;
-  border-radius: 9px;
-  color: #506078;
-  cursor: pointer;
-  position: relative;
-}
-
-.notification i {
-  position: absolute;
-  right: -3px;
-  top: -4px;
-  background: #ef4f62;
-  color: #fff;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  font-size: 9px;
-  font-style: normal;
-  display: grid;
-  place-items: center;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-left: 5px;
-}
-
-.avatar, .mini-avatar {
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #e9e3ff;
-  color: #5e42dc;
-  font-weight: 700;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-}
-
-.profile strong, .profile small {
-  display: block;
-}
-
-.profile small {
-  font-size: 10px;
-  color: #8b95a8;
-  margin-top: 2px;
-}
-
-.content {
-  padding: 27px;
-  max-width: 1600px;
-  margin: auto;
-}
-
-.welcome {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 22px;
-}
-
-.welcome h1 {
-  font-size: 22px;
-  margin: 0 0 6px;
-}
-
-.welcome p {
-  margin: 0;
-  color: #8993a6;
-}
-
-.primary {
-  border: 0;
-  background: #6547e9;
-  color: #fff;
-  padding: 11px 17px;
-  border-radius: 8px;
-  font-weight: 650;
-  cursor: pointer;
-  box-shadow: 0 5px 15px #6547e933;
-}
-
-.primary:hover {
-  filter: brightness(.95);
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.stat-card, .panel {
-  background: #fff;
-  border: 1px solid #edf0f5;
-  border-radius: 12px;
-  box-shadow: 0 3px 15px #1c2a4210;
-}
-
-.stat-card {
-  padding: 18px;
-  display: flex;
-  gap: 13px;
-  min-height: 122px;
-}
-
-.stat-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 19px;
-  flex: none;
-}
-
-.purple { background: #eee9ff; color: #6848e8; }
-.blue { background: #e5efff; color: #2774db; }
-.green { background: #e2f8ee; color: #11a36b; }
-.orange { background: #fff0dc; color: #f19a22; }
-.violet { background: #f0e9ff; color: #7746dc; }
-
-.stat-card span {
-  display: block;
-  font-size: 11px;
-  color: #69758b;
-}
-
-.stat-card strong {
-  display: inline-block;
-  font-size: 21px;
-  margin: 7px 7px 4px 0;
-}
-
-.stat-card em {
-  font-size: 10px;
-  color: #16a36b;
-  font-style: normal;
-}
-
-.stat-card small {
-  display: block;
-  color: #9aa3b4;
-  font-size: 10px;
-}
-
-.grid-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(300px, .9fr) 300px;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.panel {
-  padding: 18px;
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 13px;
-}
-
-.panel-head h3 {
-  font-size: 14px;
-  margin: 0 0 4px;
-}
-
-.panel-head p {
-  font-size: 10px;
-  color: #929bad;
-  margin: 0;
-}
-
-.panel-head select, .filters input {
-  border: 1px solid #e7ebf2;
-  background: #fff;
-  border-radius: 7px;
-  padding: 8px 10px;
-  color: #59657b;
-  font-size: 11px;
-  outline: none;
-}
-
-.legend {
-  display: flex;
-  gap: 20px;
-  color: #7e899d;
-  font-size: 10px;
-  margin-bottom: 5px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  display: inline-block;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
-.purple-dot { background: #7656ee; }
-.green-dot { background: #19ad77; }
-
-.chart {
-  height: 255px;
-  display: flex;
-}
-
-.ylabels {
-  width: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 6px 0 27px;
-  color: #9ba5b6;
-  font-size: 9px;
-  text-align: right;
-}
-
-.chart-area {
-  flex: 1;
-  position: relative;
-  margin-left: 8px;
-}
-
-.grid-lines {
-  position: absolute;
-  inset: 5px 0 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.grid-lines i {
-  height: 1px;
-  background: #edf0f5;
-}
-
-.chart svg {
-  position: absolute;
-  inset: 0 0 28px;
-  width: 100%;
-  height: 225px;
-}
-
-.line {
-  fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.purple-line { stroke: #7354ed; }
-.green-line { stroke: #16ad76; }
-
-.xlabels {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  color: #9ba5b6;
-  font-size: 9px;
-}
-
-.donut-wrap {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  height: 245px;
-}
-
-.donut {
-  width: 155px;
-  height: 155px;
-  border-radius: 50%;
-  background: conic-gradient(#7354ed 0 25%, #2878e6 25% 43%, #21b87e 43% 58%, #f39a27 58% 70%, #f05c69 70% 78%, #c4cbd9 78% 100%);
-  position: relative;
-  flex: none;
-}
-
-.donut:after {
-  content: "";
-  position: absolute;
-  inset: 38px;
-  background: #fff;
-  border-radius: 50%;
-}
-
-.cat-list {
-  width: 100%;
-  font-size: 10px;
-  color: #5e6a80;
-}
-
-.cat-list div {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 0;
-}
-
-.cat-list i {
-  width: 9px;
-  height: 9px;
-  border-radius: 3px;
-}
-
-.cat-list b {
-  margin-left: auto;
-  color: #1b2538;
-}
-
-.c1 { background: #7354ed; }
-.c2 { background: #2878e6; }
-.c3 { background: #21b87e; }
-.c4 { background: #f39a27; }
-.c5 { background: #f05c69; }
-.c6 { background: #c4cbd9; }
-
-.side-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.quick button {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid #edf0f5;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 7px 0;
-  color: #637086;
-  cursor: pointer;
-  text-align: left;
-}
-
-.quick button:first-letter {
-  color: #6749e9;
-}
-
-.quick button span {
-  flex: 1;
-  color: #29354b;
-  font-size: 11px;
-}
-
-.system .panel-head {
-  align-items: center;
-}
-
-.online {
-  color: #16a36b;
-  font-size: 10px;
-}
-
-.system-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 9px 0;
-  border-bottom: 1px solid #f0f2f6;
-  font-size: 10px;
-  color: #67738a;
-}
-
-.system-row b {
-  font-weight: 500;
-  color: #17a56e;
-}
-
-.storage {
-  padding-top: 11px;
-  font-size: 10px;
-  color: #69758a;
-}
-
-.storage b {
-  float: right;
-  font-weight: 500;
-}
-
-.storage > div {
-  height: 5px;
-  background: #edf0f4;
-  border-radius: 10px;
-  margin-top: 12px;
-}
-
-.storage i {
-  display: block;
-  width: 25%;
-  height: 100%;
-  background: #7354ed;
-  border-radius: 10px;
-}
-
-.table-panel {
-  padding-bottom: 8px;
-}
-
-.ghost {
-  border: 0;
-  background: none;
-  color: #6749e9;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.table-wrap {
-  overflow: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 850px;
-}
-
-th {
-  text-align: left;
-  color: #8a95a8;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 11px 9px;
-  border-bottom: 1px solid #eef1f5;
-}
-
-td {
-  padding: 11px 9px;
-  border-bottom: 1px solid #f0f2f6;
-  font-size: 10px;
-  color: #5c687d;
-}
-
-td:first-child {
-  font-weight: 600;
-  color: #334056;
-}
-
-.person {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #27344a;
-  font-weight: 600;
-}
-
-.mini-avatar {
-  width: 28px;
-  height: 28px;
-  font-size: 8px;
-}
-
-.person small, td > small {
-  display: block;
-  font-weight: 400;
-  color: #9ba4b4;
-  font-size: 9px;
-  margin-top: 3px;
-}
-
-.badge {
-  display: inline-block;
-  border-radius: 5px;
-  padding: 5px 8px;
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.success { background: #e2f8ed; color: #13a169; }
-.info { background: #e6efff; color: #3577d5; }
-.warning { background: #fff2dc; color: #e49525; }
-.danger { background: #ffe8ea; color: #e34e5c; }
-
-.view {
-  width: 31px;
-  height: 27px;
-  border: 1px solid #e8ebf1;
-  border-radius: 7px;
-  background: #fff;
-  color: #6b768b;
-  cursor: pointer;
-}
-
-.hidden {
-  display: none;
-}
-
-.generic-page .panel {
-  min-height: 400px;
-}
-
-.filters {
-  display: flex;
-  gap: 8px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 75px 20px;
-  color: #8490a3;
-}
-
-.empty-state > div {
-  width: 58px;
-  height: 58px;
-  margin: auto auto 16px;
-  border-radius: 16px;
-  background: #eee9ff;
-  color: #694ae8;
-  display: grid;
-  place-items: center;
-  font-size: 25px;
-}
-
-.empty-state h2 {
-  color: #27344a;
-  font-size: 17px;
-  margin: 0 0 7px;
-}
-
-.empty-state p {
-  max-width: 520px;
-  margin: 0 auto 20px;
-  line-height: 1.6;
-  font-size: 11px;
-}
-
-.toast {
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
-  background: #17233b;
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 11px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: .25s;
-  pointer-events: none;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: none;
-}
-
-.mobile-menu {
-  display: none;
-}
-
-/* --- ÖDEME DETAYLARI VE MODAL EKRANI DÜZENLEMESİ --- */
-.modal, 
-.modal-overlay, 
-div[style*="position: fixed"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 16px !important;
-    box-sizing: border-box !important;
-    z-index: 9999 !important;
-}
-
-.modal-content, 
-div[style*="background: white"], 
-div[style*="background:#fff"] {
-    width: 100% !important;
-    max-width: 750px !important;
-    max-height: 85vh !important;
-    overflow-y: auto !important;
-    border-radius: 12px !important;
-    padding: 24px !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
-    box-sizing: border-box !important;
-}
-
-.modal table, 
-div[style*="position: fixed"] table {
-    width: 100% !important;
-    table-layout: auto !important;
-    border-collapse: collapse !important;
-}
-
-.modal table th, 
-.modal table td, 
-div[style*="position: fixed"] table th, 
-div[style*="position: fixed"] table td {
-    padding: 12px !important;
-    text-align: left !important;
-}
-
-@media(max-width: 1250px) {
-  .stats { grid-template-columns: repeat(3, 1fr); }
-  .grid-main { grid-template-columns: 1.5fr 1fr; }
-  .side-stack { grid-column: 1/-1; display: grid; grid-template-columns: 1fr 1fr; }
-  .search { width: 240px; }
-}
-
-@media(max-width: 900px) {
-  .sidebar { transform: translateX(-100%); transition: .25s; z-index: 10; }
-  .sidebar.open { transform: none; }
-  .main { margin-left: 0; }
-  .mobile-menu { display: block; }
-  .topbar { padding: 0 15px; }
-  .breadcrumb { min-width: auto; }
-  .breadcrumb small { display: none; }
-  .top-actions .search { display: none; }
-  .content { padding: 18px; }
-  .stats { grid-template-columns: 1fr 1fr; }
-  .grid-main { grid-template-columns: 1fr; }
-  .side-stack { grid-template-columns: 1fr; }
-  .category-panel { min-height: 300px; }
-}
-
-@media(max-width: 560px) {
-  .stats { grid-template-columns: 1fr; }
-  .welcome { align-items: flex-start; gap: 15px; flex-direction: column; }
-  .profile div:not(.avatar), .profile>span { display: none; }
-  .topbar { gap: 10px; }
-  .donut-wrap { flex-direction: column; height: auto; padding: 15px 0; }
-  .donut { width: 135px; height: 135px; }
-  .donut:after { inset: 33px; }
-  .grid-main { grid-template-columns: 1fr; }
-  .side-stack { grid-template-columns: 1fr; }
-  .category-panel { min-height: 300px; }
-}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HizmetBirleştir — Admin Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Giriş Ekranı -->
+<div id="loginScreen" style="display: none; position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
+    <div style="background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="width: 50px; height: 50px; background: linear-gradient(135deg,#6d4aff,#8f6cff); border-radius: 14px; margin: 0 auto 15px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;">HB</div>
+            <h2 style="margin: 0; font-size: 20px; color: #172033;">Yönetici Girişi</h2>
+            <p style="margin: 5px 0 0; font-size: 12px; color: #8ea0c3;">BizGeliyoruz Yönetim Paneli</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">E-posta</label>
+            <input type="email" id="loginEmail" placeholder="admin@bizgeliyoruz.com" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">Şifre</label>
+            <input type="password" id="loginPassword" placeholder="******" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
+        </div>
+        <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
+        <p id="loginError" style="color: #ef4f62; font-size: 11px; text-align: center; margin-top: 15px; display: none;">Hatalı e-posta veya şifre!</p>
+    </div>
+</div>
+  <!-- Sol Üst Sabit Logo ve Başlık Alanı -->
+<header class="app-header">
+  <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
+  <span class="app-title">bizgeliyoruz</span>
+</header>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">HB</div>
+      <div><strong>HizmetBirleştir</strong><span>Admin Paneli</span></div>
+    </div>
+
+    <nav>
+      <div class="nav-label">GENEL</div>
+      <a class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</a>
+
+      <div class="nav-label">YÖNETİM</div>
+      <a class="nav-item" data-page="users"><span>♙</span> Kullanıcılar <b>22</b></a>
+      <a class="nav-item" data-page="providers"><span>▣</span> Hizmet Verenler <b>16</b></a>
+      <a class="nav-item" data-page="customers"><span>♙</span> Hizmet Alanlar</a>
+      <a class="nav-item" data-page="services"><span>◈</span> Hizmetler</a>
+      <a class="nav-item" data-page="categories"><span>📂</span> Kategoriler</a>
+      <a class="nav-item" data-page="payments"><span>₺</span> Ödemeler</a>
+      <a class="nav-item" data-page="reviews"><span>★</span> Yorumlar & Puanlar</a>
+
+      <div class="nav-label">İÇERİK</div>
+      <a class="nav-item" data-page="banners"><span>▰</span> Banner Yönetimi</a>
+
+      <div class="nav-label">SİSTEM</div>
+      <a class="nav-item" data-page="settings"><span>⚙</span> Ayarlar</a>
+      <a class="nav-item" data-page="logs"><span>≡</span> Sistem Logları</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
+      <div class="breadcrumb"><span id="pageTitle">Dashboard</span><small> / Genel Bakış</small></div>
+      <div class="top-actions">
+        <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
+        <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
+        <button class="icon-btn">⛶</button>
+    <div class="profile" style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 99999;">
+    <div class="avatar">BG</div>
+    <div>
+        <strong>Admin</strong>
+        <small>Yönetici</small>
+    </div>
+    <!-- Doğrudan Tıklanabilir Çıkış Butonu -->
+    <button type="button" onclick="adminLogout()" style="background: #ef4f62; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; margin-left: 10px; box-shadow: 0 2px 5px rgba(239,79,98,0.3);">
+        Çıkış Yap
+    </button>
+</div>
+
+    <section class="content">
+      <div id="dashboardPage">
+        <div class="welcome">
+          <div><h1>Günaydın, Admin 👋</h1><p>Platformun bugünkü durumuna genel bakış.</p></div>
+          <button class="primary" id="newServiceBtn">＋ Yeni Hizmet</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card"><div class="stat-icon purple">♙</div><div><span>Toplam Kullanıcı</span><strong>12.845</strong><em>↗ 12.5%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon blue">▣</div><div><span>Hizmet Veren</span><strong>3.672</strong><em>↗ 8.3%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon green">♙</div><div><span>Hizmet Alan</span><strong>9.173</strong><em>↗ 14.2%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon orange">🛒</div><div><span>Toplam Sipariş</span><strong>18.392</strong><em>↗ 16.7%</em><small>Geçen aya göre</small></div></div>
+          <div class="stat-card"><div class="stat-icon violet">₺</div><div><span>Toplam Gelir</span><strong>₺1.245.780</strong><em>↗ 22.4%</em><small>Geçen aya göre</small></div></div>
+          
+          <!-- Yeni Eklenen: Alınan Komisyon (%20) -->
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">💰</div>
+            <div><span>Alınan Komisyon (%20)</span><strong id="totalCommissionText">₺0</strong><em>Sabit Oran</em><small>Platform kazancı</small></div>
+          </div>
+
+          <!-- Yeni Eklenen: Toplam Gider (Ustaya) -->
+          <div class="stat-card">
+            <!-- Yeni Hali -->
+<div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
+            <div><span>Toplam Gider (Ustaya)</span><strong id="totalExpenseText">₺0</strong><em>Aktarılan</em><small>Usta ödemeleri</small></div>
+          </div>
+        </div>
+
+        <div class="grid-main">
+          <div class="panel chart-panel">
+            <div class="panel-head"><div><h3>Sipariş / Talep İstatistikleri</h3><p>Son 30 günlük performans</p></div><select><option>Son 30 Gün</option><option>Son 7 Gün</option><option>Bu Yıl</option></select></div>
+            <div class="legend"><span><i class="dot purple-dot"></i>Sipariş Sayısı</span><span><i class="dot green-dot"></i>Tamamlanan Sipariş</span></div>
+            <div class="chart"><div class="ylabels"><span>1.000</span><span>800</span><span>600</span><span>400</span><span>200</span><span>0</span></div><div class="chart-area">
+              <div class="grid-lines"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <svg viewBox="0 0 760 280" preserveAspectRatio="none" aria-label="Sipariş grafiği">
+                <polyline class="line purple-line" points="0,155 55,160 110,130 165,145 220,170 275,120 330,105 385,115 440,90 495,120 550,120 605,70 660,95 710,82 760,60"/>
+                <polyline class="line green-line" points="0,205 55,195 110,195 165,165 220,175 275,155 330,125 385,160 440,135 495,155 550,150 605,120 660,145 710,130 760,105"/>
+              </svg>
+              <div class="xlabels"><span>5 Ağu</span><span>10 Ağu</span><span>15 Ağu</span><span>20 Ağu</span><span>25 Ağu</span><span>30 Ağu</span><span>Bugün</span></div>
+            </div></div>
+          </div>
+
+          <div class="panel category-panel">
+            <div class="panel-head"><div><h3>Kategorilere Göre Dağılım</h3><p>Aktif hizmetlerin dağılımı</p></div></div>
+            <div class="donut-wrap"><div class="donut"></div><div class="cat-list">
+              <div><i class="c1"></i>Temizlik <b>25%</b></div><div><i class="c2"></i>Tadilat & Onarım <b>18%</b></div><div><i class="c3"></i>Taşımacılık <b>15%</b></div><div><i class="c4"></i>Özel Ders <b>12%</b></div><div><i class="c5"></i>Organizasyon <b>8%</b></div><div><i class="c6"></i>Diğer <b>22%</b></div>
+            </div></div>
+          </div>
+
+          <div class="side-stack">
+            <div class="panel quick"><div class="panel-head"><h3>Hızlı İşlemler</h3></div>
+              <button>＋ <span>Yeni Hizmet Ekle</span> ›</button><button>♧ <span>Yeni Duyuru Yayınla</span> ›</button><button>♙ <span>Kullanıcı Ekle</span> ›</button><button>▣ <span>Banner Ekle</span> ›</button>
+            </div>
+            <div class="panel system"><div class="panel-head"><h3>Sistem Durumu</h3><span class="online">● Çevrimiçi</span></div>
+              <div class="system-row">◉ Sunucu Durumu <b>Çevrimiçi ✓</b></div><div class="system-row">▤ Veritabanı <b>Çevrimiçi ✓</b></div><div class="system-row">✉ Mail Servisi <b>Çevrimiçi ✓</b></div><div class="storage"><span>Depolama Alanı</span><b>256 GB / 1 TB</b><div><i></i></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel table-panel">
+          <div class="panel-head"><div><h3>Son Siparişler / Talepler</h3><p>Platformdaki son hareketler</p></div><button class="ghost" id="allOrders">Tümünü Gör →</button></div>
+          <div class="table-wrap"><table id="ordersTable"><thead><tr><th>#</th><th>Müşteri</th><th>Hizmet</th><th>Tutar</th><th>Durum</th><th>Tarih</th><th>İşlem</th></tr></thead>
+          <tbody>
+            <tr><td>#18291</td><td><div class="person"><div class="mini-avatar">AY</div><span>Ayşe Yılmaz<small>ayseyilmaz@mail.com</small></span></div></td><td>Ev Temizliği<small>Genel Temizlik</small></td><td><b>₺750,00</b></td><td><label class="badge success">Tamamlandı</label></td><td>02.09.2026<small>10:30</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18290</td><td><div class="person"><div class="mini-avatar">MD</div><span>Mehmet Demir<small>mehmetdemir@mail.com</small></span></div></td><td>Elektrik Tesisatı<small>Priz Montajı</small></td><td><b>₺450,00</b></td><td><label class="badge info">Onaylandı</label></td><td>02.09.2026<small>09:15</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18289</td><td><div class="person"><div class="mini-avatar">ZK</div><span>Zeynep Kaya<small>zeynepkaya@mail.com</small></span></div></td><td>Özel Ders<small>Matematik</small></td><td><b>₺600,00</b></td><td><label class="badge warning">Beklemede</label></td><td>01.09.2026<small>16:45</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18288</td><td><div class="person"><div class="mini-avatar">AÇ</div><span>Ali Çelik<small>alicelik@mail.com</small></span></div></td><td>Eşya Taşıma<small>Şehir İçi Nakliye</small></td><td><b>₺1.200,00</b></td><td><label class="badge danger">İptal Edildi</label></td><td>01.09.2026<small>11:20</small></td><td><button class="view">◉</button></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <div id="genericPage" class="generic-page hidden">
+        <div class="welcome"><div><h1 id="genericTitle">Kullanıcılar</h1><p id="genericDesc">Platform yönetimi.</p></div><button class="primary">＋ Yeni Kayıt</button></div>
+        <div class="panel"><div class="panel-head"><h3 id="genericHeading">Kayıtlar</h3><div class="filters"><input placeholder="Filtrele..." /><button class="ghost">Filtrele</button></div></div>
+          <div class="empty-state"><div>◈</div><h2>Yönetim ekranı hazır</h2><p>Bu bölüm için veri tabanı bağlantısı yapıldığında kayıtlar, filtreler, arama ve detay ekranları burada çalışacaktır.</p><button class="primary" id="backDashboard">Dashboard'a Dön</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
+  <script src="app.js?v=2.0"></script>
+</body>
+</html>
