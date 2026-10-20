@@ -878,3 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 checkAuth();
+window.adminLogout = function() {
+    localStorage.removeItem('isAdminLoggedIn');
+    location.reload();
+}
