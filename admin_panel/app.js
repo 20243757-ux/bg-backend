@@ -807,26 +807,48 @@ async function loadPaymentsData() {
     fetchPaymentsSummary();
   }
 }
-window.toggleProfileMenu = function() {
+window.toggleProfileMenu = function(event) {
+    if (event) event.stopPropagation();
     const menu = document.getElementById('profileDropdown');
     if (menu) {
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 }
 
-window.adminLogout = function() {
+window.adminLogout = function(event) {
+    if (event) event.stopPropagation();
     localStorage.removeItem('isAdminLoggedIn');
     location.reload();
 }
 
-window.onclick = function(event) {
-    if (!event.target.closest('.profile')) {
-        const menu = document.getElementById('profileDropdown');
-        if (menu) menu.style.display = 'none';
+window.addEventListener('click', function(event) {
+    const menu = document.getElementById('profileDropdown');
+    if (menu && !event.target.closest('.profile')) {
+        menu.style.display = 'none';
+    }
+});
+
+// Giriş Kontrolü ve Sabit Hesap Doğrulama
+window.toggleProfileMenu = function(event) {
+    if (event) event.stopPropagation();
+    const menu = document.getElementById('profileDropdown');
+    if (menu) {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 }
 
-// Giriş Kontrolü ve Sabit Hesap Doğrulama
+window.adminLogout = function(event) {
+    if (event) event.stopPropagation();
+    localStorage.removeItem('isAdminLoggedIn');
+    location.reload();
+}
+
+window.addEventListener('click', function(event) {
+    const menu = document.getElementById('profileDropdown');
+    if (menu && !event.target.closest('.profile')) {
+        menu.style.display = 'none';
+    }
+});
 function checkAuth() {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
     const loginScreen = document.getElementById('loginScreen');
@@ -843,7 +865,6 @@ window.handleLogin = function() {
     const email = emailInput ? emailInput.value.trim() : '';
     const pass = passInput ? passInput.value.trim() : '';
 
-    // Sabit hesap bilgileri
     if (email === 'admin@bizgeliyoruz.com' && pass === '123456') {
         localStorage.setItem('isAdminLoggedIn', 'true');
         checkAuth();
@@ -852,10 +873,8 @@ window.handleLogin = function() {
     }
 }
 
-// Sayfa açıldığında yetkiyi kontrol et
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
 });
 
-// Alternatif olarak hemen çalıştır:
 checkAuth();
