@@ -871,3 +871,10 @@ window.adminLogout = function() {
         location.reload();
     }
 }
+function checkAuth() {
+    const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+    const loginScreen = document.getElementById('loginScreen');
+    if (loginScreen) {
+        loginScreen.style.display = isLoggedIn === 'true' ? 'none' : 'flex';
+    }
+}
