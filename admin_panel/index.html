@@ -67,20 +67,23 @@
     <header class="topbar">
       <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
       <div class="breadcrumb"><span id="pageTitle">Dashboard</span><small> / Genel Bakış</small></div>
-      <div class="top-actions">
-        <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
-        <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
-        <button class="icon-btn">⛶</button>
-    <div class="profile" style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 99999;">
-    <div class="avatar">BG</div>
-    <div>
-        <strong>Admin</strong>
-        <small>Yönetici</small>
-    </div>
-    <!-- Doğrudan Tıklanabilir Çıkış Butonu -->
-    <button type="button" onclick="adminLogout()" style="background: #ef4f62; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; margin-left: 10px; box-shadow: 0 2px 5px rgba(239,79,98,0.3);">
+       <div class="top-actions" style="display: flex; align-items: center; gap: 15px;">
+    <input id="globalSearch" placeholder="Ara...">
+    <button class="icon-btn notification" title="Bildirimler"><i class="i">5</i></button>
+    <button class="icon-btn"><i class="i"></i></button>
+    
+    <!-- Doğrudan Tıklanabilir Güvenli Çıkış Butonu -->
+    <button type="button" onclick="adminLogout()" style="background: #ef4f62; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(239,79,98,0.3);">
         Çıkış Yap
     </button>
+
+    <div class="profile" style="cursor: pointer; position: relative;">
+        <div class="avatar">BG</div>
+        <div>
+            <strong>Admin</strong>
+            <small>Yönetici</small>
+        </div>
+    </div>
 </div>
 
     <section class="content">
