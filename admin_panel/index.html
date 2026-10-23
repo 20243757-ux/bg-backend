@@ -10,27 +10,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Giriş Ekranı Overlay -->
-<div id="loginScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 999999; justify-content: center; align-items: center; backdrop-filter: blur(8px);">
-    <div style="background: #ffffff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center;">
-        <h2 style="margin-bottom: 10px; color: #1e293b; font-size: 24px;">Admin Paneli</h2>
-        <p style="color: #64748b; margin-bottom: 25px; font-size: 14px;">Lütfen yönetici bilgilerinizi girin.</p>
-        
-        <div style="margin-bottom: 15px; text-align: left;">
-            <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">E-posta Adresi</label>
-            <input type="email" id="loginEmail" placeholder="admin@bizgeliyoruz.com" style="width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; box-sizing: border-box;">
-        </div>
-        
-        <div style="margin-bottom: 20px; text-align: left;">
-            <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">Şifre</label>
-            <input type="password" id="loginPassword" placeholder="******" style="width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; box-sizing: border-box;">
-        </div>
-        
-        <div id="loginError" style="display: none; color: #ef4f62; font-size: 13px; margin-bottom: 15px; font-weight: 500;">Hatalı e-posta veya şifre!</div>
-        
-        <button type="button" onclick="handleLogin()" style="width: 100%; padding: 12px; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Giriş Yap</button>
-    </div>
-</div>
   <!-- Giriş Ekranı -->
 <div id="loginScreen" style="display: none; position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
     <div style="background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
@@ -88,22 +67,19 @@
     <header class="topbar">
       <button class="icon-btn mobile-menu" id="menuBtn">☰</button>
       <div class="breadcrumb"><span id="pageTitle">Dashboard</span><small> / Genel Bakış</small></div>
-       <div class="top-actions" style="display: flex; align-items: center; gap: 15px;">
-    <input id="globalSearch" placeholder="Ara...">
-    <button class="icon-btn notification" title="Bildirimler"><i class="i">5</i></button>
-    <button class="icon-btn"><i class="i"></i></button>
-    
-    <!-- Doğrudan Tıklanabilir Güvenli Çıkış Butonu -->
-    <button type="button" onclick="adminLogout()" style="background: #ef4f62; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(239,79,98,0.3);">
-        Çıkış Yap
-    </button>
-
-    <div class="profile" style="cursor: pointer; position: relative;">
-        <div class="avatar">BG</div>
-        <div>
-            <strong>Admin</strong>
-            <small>Yönetici</small>
-        </div>
+      <div class="top-actions">
+        <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
+        <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
+        <button class="icon-btn">⛶</button>
+      <div class="profile" style="cursor: pointer; position: relative;" onclick="toggleProfileMenu()">
+    <div class="avatar">BG</div>
+    <div>
+        <strong>Admin</strong>
+        <small>Yönetici</small>
+    </div>
+    <!-- Çıkış Menüsü -->
+    <div id="profileDropdown" style="display: none; position: absolute; top: 45px; right: 0; background: #fff; border: 1px solid #edf0f5; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 130px; z-index: 1000;">
+        <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
     </div>
 </div>
 
@@ -189,5 +165,41 @@
 
   <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
   <script src="app.js?v=2.0"></script>
+ <script>
+// Global fonksiyon - onclick doğrudan burayı bulur
+function handleLogin() {
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+    const errorDiv = document.getElementById('loginError');
+    const loginScreen = document.getElementById('loginScreen');
+
+    if (!emailInput || !passwordInput) return;
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
+        localStorage.setItem('isAdminLoggedIn', 'true');
+        if (loginScreen) {
+            loginScreen.style.display = 'none';
+        }
+        location.reload();
+    } else {
+        if (errorDiv) {
+            errorDiv.style.display = 'block';
+        }
+    }
+}
+
+// Sayfa açıldığında daha önce giriş yapıldıysa ekranı gizle
+window.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+        const loginScreen = document.getElementById('loginScreen');
+        if (loginScreen) {
+            loginScreen.style.display = 'none';
+        }
+    }
+});
+</script>
 </body>
 </html>
