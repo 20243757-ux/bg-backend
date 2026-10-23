@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Giriş Ekranı (Başlangıçta display flex yapıldı, JS ile kontrol edilecek) -->
-<div id="loginScreen" style="position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
+  <!-- Giriş Ekranı -->
+  <div id="loginScreen" style="position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: none; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
     <div style="background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
         <div style="text-align: center; margin-bottom: 25px;">
             <div style="width: 50px; height: 50px; background: linear-gradient(135deg,#6d4aff,#8f6cff); border-radius: 14px; margin: 0 auto 15px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;">HB</div>
@@ -26,15 +26,17 @@
             <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">Şifre</label>
             <input type="password" id="loginPassword" placeholder="******" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
         </div>
-        <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
+        <button type="button" id="loginSubmitBtn" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
         <p id="loginError" style="color: #ef4f62; font-size: 11px; text-align: center; margin-top: 15px; display: none;">Hatalı e-posta veya şifre!</p>
     </div>
-</div>
+  </div>
+
   <!-- Sol Üst Sabit Logo ve Başlık Alanı -->
-<header class="app-header">
-  <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
-  <span class="app-title">bizgeliyoruz</span>
-</header>
+  <header class="app-header">
+    <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
+    <span class="app-title">bizgeliyoruz</span>
+  </header>
+
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-mark">HB</div>
@@ -71,17 +73,17 @@
         <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Ara..." /></div>
         <button class="icon-btn notification" title="Bildirimler">♧<i>5</i></button>
         <button class="icon-btn">⛶</button>
-      <div class="profile" style="cursor: pointer; position: relative;" onclick="toggleProfileMenu()">
-    <div class="avatar">BG</div>
-    <div>
-        <strong>Admin</strong>
-        <small>Yönetici</small>
-    </div>
-    <!-- Çıkış Menüsü -->
-    <div id="profileDropdown" style="display: none; position: absolute; top: 45px; right: 0; background: #fff; border: 1px solid #edf0f5; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 130px; z-index: 1000;">
-        <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
-    </div>
-</div>
+        <div class="profile" style="cursor: pointer; position: relative;" onclick="toggleProfileMenu()">
+          <div class="avatar">BG</div>
+          <div>
+              <strong>Admin</strong>
+              <small>Yönetici</small>
+          </div>
+          <!-- Çıkış Menüsü -->
+          <div id="profileDropdown" style="display: none; position: absolute; top: 45px; right: 0; background: #fff; border: 1px solid #edf0f5; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 130px; z-index: 1000;">
+              <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -107,7 +109,7 @@
 
           <!-- Yeni Eklenen: Toplam Gider (Ustaya) -->
           <div class="stat-card">
-<div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
+            <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
             <div><span>Toplam Gider (Ustaya)</span><strong id="totalExpenseText">₺0</strong><em>Aktarılan</em><small>Usta ödemeleri</small></div>
           </div>
         </div>
@@ -166,46 +168,56 @@
 
   <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
   <script src="app.js?v=2.0"></script>
-<script>
-// Sayfa ilk açıldığında localStorage kontrolünü anında yapıyoruz (Çakışmayı önlemek için)
-(function() {
-    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+  
+  <script>
+    // Güvenli Oturum Kontrolü ve Dinleyici Yapısı
+    document.addEventListener("DOMContentLoaded", function () {
         const loginScreen = document.getElementById('loginScreen');
-        if (loginScreen) {
-            loginScreen.style.display = 'none';
+        
+        // Eğer daha önce giriş yapılmamışsa giriş ekranını göster
+        if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+            if (loginScreen) {
+                loginScreen.style.display = 'flex';
+            }
+        } else {
+            if (loginScreen) {
+                loginScreen.style.display = 'none';
+            }
         }
-    }
-})();
 
-function handleLogin() {
-    const emailInput = document.getElementById('loginEmail');
-    const passwordInput = document.getElementById('loginPassword');
-    const errorDiv = document.getElementById('loginError');
-    const loginScreen = document.getElementById('loginScreen');
+        // Giriş Yap Butonu Dinleyicisi (HTML onclick çakışmalarını tamamen önler)
+        const loginBtn = document.getElementById('loginSubmitBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function () {
+                const emailInput = document.getElementById('loginEmail');
+                const passwordInput = document.getElementById('loginPassword');
+                const errorDiv = document.getElementById('loginError');
 
-    if (!emailInput || !passwordInput) return;
+                if (!emailInput || !passwordInput) return;
 
-    const email = emailInput.value.trim().toLowerCase();
-    const password = passwordInput.value.trim();
+                const email = emailInput.value.trim().toLowerCase();
+                const password = passwordInput.value.trim();
 
-    if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
-        localStorage.setItem('isAdminLoggedIn', 'true');
-        if (loginScreen) {
-            loginScreen.style.display = 'none';
+                if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    if (loginScreen) {
+                        loginScreen.style.display = 'none';
+                    }
+                    location.reload();
+                } else {
+                    if (errorDiv) {
+                        errorDiv.style.display = 'block';
+                    }
+                }
+            });
         }
+    });
+
+    // Çıkış Yap Fonksiyonu
+    function adminLogout() {
+        localStorage.removeItem('isAdminLoggedIn');
         location.reload();
-    } else {
-        if (errorDiv) {
-            errorDiv.style.display = 'block';
-        }
     }
-}
-
-// Çıkış yap fonksiyonu (Profil menüsündeki çıkış için)
-function adminLogout() {
-    localStorage.removeItem('isAdminLoggedIn');
-    location.reload();
-}
-</script>
+  </script>
 </body>
 </html>
