@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Giriş Ekranı -->
-<div id="loginScreen" style="display: none; position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
+  <!-- Giriş Ekranı (Başlangıçta display flex yapıldı, JS ile kontrol edilecek) -->
+<div id="loginScreen" style="position: fixed; inset: 0; background: #0d1a35; z-index: 9999; display: flex; align-items: center; justify-content: center; font-family: Inter, Arial, sans-serif;">
     <div style="background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
         <div style="text-align: center; margin-bottom: 25px;">
             <div style="width: 50px; height: 50px; background: linear-gradient(135deg,#6d4aff,#8f6cff); border-radius: 14px; margin: 0 auto 15px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;">HB</div>
@@ -82,6 +82,8 @@
         <button onclick="adminLogout()" style="width: 100%; padding: 10px; background: none; border: none; text-align: left; color: #ef4f62; font-weight: 600; cursor: pointer; border-radius: 8px;">Çıkış Yap</button>
     </div>
 </div>
+      </div>
+    </header>
 
     <section class="content">
       <div id="dashboardPage">
@@ -105,7 +107,6 @@
 
           <!-- Yeni Eklenen: Toplam Gider (Ustaya) -->
           <div class="stat-card">
-            <!-- Yeni Hali -->
 <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
             <div><span>Toplam Gider (Ustaya)</span><strong id="totalExpenseText">₺0</strong><em>Aktarılan</em><small>Usta ödemeleri</small></div>
           </div>
@@ -165,8 +166,17 @@
 
   <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
   <script src="app.js?v=2.0"></script>
- <script>
-// Global fonksiyon - onclick doğrudan burayı bulur
+<script>
+// Sayfa ilk açıldığında localStorage kontrolünü anında yapıyoruz (Çakışmayı önlemek için)
+(function() {
+    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+        const loginScreen = document.getElementById('loginScreen');
+        if (loginScreen) {
+            loginScreen.style.display = 'none';
+        }
+    }
+})();
+
 function handleLogin() {
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
@@ -175,7 +185,7 @@ function handleLogin() {
 
     if (!emailInput || !passwordInput) return;
 
-    const email = emailInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
     const password = passwordInput.value.trim();
 
     if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
@@ -191,15 +201,11 @@ function handleLogin() {
     }
 }
 
-// Sayfa açıldığında daha önce giriş yapıldıysa ekranı gizle
-window.addEventListener('DOMContentLoaded', function() {
-    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-        const loginScreen = document.getElementById('loginScreen');
-        if (loginScreen) {
-            loginScreen.style.display = 'none';
-        }
-    }
-});
+// Çıkış yap fonksiyonu (Profil menüsündeki çıkış için)
+function adminLogout() {
+    localStorage.removeItem('isAdminLoggedIn');
+    location.reload();
+}
 </script>
 </body>
 </html>
