@@ -26,15 +26,14 @@
             <label style="display: block; font-size: 11px; font-weight: 600; color: #59657b; margin-bottom: 6px;">Şifre</label>
             <input type="password" id="loginPassword" placeholder="******" style="width: 100%; padding: 12px; border: 1px solid #e7ebf2; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box;">
         </div>
-        <button type="button" onclick="executeLogin()" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
+        <button type="button" onclick="handleLogin()" style="width: 100%; padding: 12px; background: #6547e9; color: #fff; border: none; border-radius: 8px; font-weight: 650; cursor: pointer; font-size: 13px; box-shadow: 0 5px 15px #6547e933;">Giriş Yap</button>
         <p id="loginError" style="color: #ef4f62; font-size: 11px; text-align: center; margin-top: 15px; display: none;">Hatalı e-posta veya şifre!</p>
     </div>
   </div>
 
   <!-- Sol Üst Sabit Logo ve Başlık Alanı -->
   <header class="app-header">
-    <img src="logo.png" alt="bizgeliyoruz logo" class="app-logo">
-    <span class="app-title">bizgeliyoruz</span>
+    <span class="app-title" style="font-weight: 700; color: #6547e9; font-size: 16px; padding-left: 15px;">bizgeliyoruz</span>
   </header>
 
   <aside class="sidebar" id="sidebar">
@@ -101,13 +100,11 @@
           <div class="stat-card"><div class="stat-icon orange">🛒</div><div><span>Toplam Sipariş</span><strong>18.392</strong><em>↗ 16.7%</em><small>Geçen aya göre</small></div></div>
           <div class="stat-card"><div class="stat-icon violet">₺</div><div><span>Toplam Gelir</span><strong>₺1.245.780</strong><em>↗ 22.4%</em><small>Geçen aya göre</small></div></div>
           
-          <!-- Yeni Eklenen: Alınan Komisyon (%20) -->
           <div class="stat-card">
             <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">💰</div>
             <div><span>Alınan Komisyon (%20)</span><strong id="totalCommissionText">₺0</strong><em>Sabit Oran</em><small>Platform kazancı</small></div>
           </div>
 
-          <!-- Yeni Eklenen: Toplam Gider (Ustaya) -->
           <div class="stat-card">
             <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">📤</div>
             <div><span>Toplam Gider (Ustaya)</span><strong id="totalExpenseText">₺0</strong><em>Aktarılan</em><small>Usta ödemeleri</small></div>
@@ -151,7 +148,7 @@
           <tbody>
             <tr><td>#18291</td><td><div class="person"><div class="mini-avatar">AY</div><span>Ayşe Yılmaz<small>ayseyilmaz@mail.com</small></span></div></td><td>Ev Temizliği<small>Genel Temizlik</small></td><td><b>₺750,00</b></td><td><label class="badge success">Tamamlandı</label></td><td>02.09.2026<small>10:30</small></td><td><button class="view">◉</button></td></tr>
             <tr><td>#18290</td><td><div class="person"><div class="mini-avatar">MD</div><span>Mehmet Demir<small>mehmetdemir@mail.com</small></span></div></td><td>Elektrik Tesisatı<small>Priz Montajı</small></td><td><b>₺450,00</b></td><td><label class="badge info">Onaylandı</label></td><td>02.09.2026<small>09:15</small></td><td><button class="view">◉</button></td></tr>
-            <tr><td>#18289</td><td><div class="Person"><div class="mini-avatar">ZK</div><span>Zeynep Kaya<small>zeynepkaya@mail.com</small></span></div></td><td>Özel Ders<small>Matematik</small></td><td><b>₺600,00</b></td><td><label class="badge warning">Beklemede</label></td><td>01.09.2026<small>16:45</small></td><td><button class="view">◉</button></td></tr>
+            <tr><td>#18289</td><td><div class="person"><div class="mini-avatar">ZK</div><span>Zeynep Kaya<small>zeynepkaya@mail.com</small></span></div></td><td>Özel Ders<small>Matematik</small></td><td><b>₺600,00</b></td><td><label class="badge warning">Beklemede</label></td><td>01.09.2026<small>16:45</small></td><td><button class="view">◉</button></td></tr>
             <tr><td>#18288</td><td><div class="person"><div class="mini-avatar">AÇ</div><span>Ali Çelik<small>alicelik@mail.com</small></span></div></td><td>Eşya Taşıma<small>Şehir İçi Nakliye</small></td><td><b>₺1.200,00</b></td><td><label class="badge danger">İptal Edildi</label></td><td>01.09.2026<small>11:20</small></td><td><button class="view">◉</button></td></tr>
           </tbody></table></div>
         </div>
@@ -170,31 +167,34 @@
   <script src="app.js?v=2.0"></script>
   
   <script>
-    // Sayfa yüklendiğinde oturum kontrolünü anında yapıyoruz
-    const loginScreen = document.getElementById('loginScreen');
-    if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-        if (loginScreen) {
-            loginScreen.style.display = 'none';
+    // 1. Oturum Durumu Kontrolü (Hemen Çalışır)
+    (function() {
+        var loginScreen = document.getElementById('loginScreen');
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            if (loginScreen) {
+                loginScreen.style.display = 'none';
+            }
+        } else {
+            if (loginScreen) {
+                loginScreen.style.display = 'flex';
+            }
         }
-    } else {
-        if (loginScreen) {
-            loginScreen.style.display = 'flex';
-        }
-    }
+    })();
 
-    // Doğrudan HTML içinden tetiklenen garanti giriş fonksiyonu
-    function executeLogin() {
-        const emailInput = document.getElementById('loginEmail');
-        const passwordInput = document.getElementById('loginPassword');
-        const errorDiv = document.getElementById('loginError');
+    // 2. Giriş Yap Butonu Fonksiyonu (Doğrudan onclick ile tetiklenir)
+    function handleLogin() {
+        var emailInput = document.getElementById('loginEmail');
+        var passwordInput = document.getElementById('loginPassword');
+        var errorDiv = document.getElementById('loginError');
+        var loginScreen = document.getElementById('loginScreen');
 
         if (!emailInput || !passwordInput) {
-            alert("Hata: Input alanları bulunamadı!");
+            alert("Giriş alanları bulunamadı!");
             return;
         }
 
-        const email = emailInput.value.trim().toLowerCase();
-        const password = passwordInput.value.trim();
+        var email = emailInput.value.trim().toLowerCase();
+        var password = passwordInput.value.trim();
 
         if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
             localStorage.setItem('isAdminLoggedIn', 'true');
@@ -209,7 +209,7 @@
         }
     }
 
-    // Çıkış Yap Fonksiyonu
+    // 3. Çıkış Yap Fonksiyonu
     function adminLogout() {
         localStorage.removeItem('isAdminLoggedIn');
         location.reload();
