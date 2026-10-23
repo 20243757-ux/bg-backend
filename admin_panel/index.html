@@ -166,8 +166,8 @@
   <div class="toast" id="toast">İşlem başarıyla gerçekleştirildi.</div>
   <script src="app.js?v=2.0"></script>
   
-  <script>
-    // 1. Oturum Durumu Kontrolü (Hemen Çalışır)
+ <script>
+    // Sayfa açıldığında oturum kontrolü
     (function() {
         var loginScreen = document.getElementById('loginScreen');
         if (localStorage.getItem('isAdminLoggedIn') === 'true') {
@@ -181,35 +181,43 @@
         }
     })();
 
-    // 2. Giriş Yap Butonu Fonksiyonu (Doğrudan onclick ile tetiklenir)
+    // Giriş Yap Butonu Fonksiyonu (Log takipli)
     function handleLogin() {
+        console.log(">>> Giriş Yap butonuna tıklandı ve fonksiyon çalıştı! <<<");
+
         var emailInput = document.getElementById('loginEmail');
         var passwordInput = document.getElementById('loginPassword');
         var errorDiv = document.getElementById('loginError');
         var loginScreen = document.getElementById('loginScreen');
 
         if (!emailInput || !passwordInput) {
-            alert("Giriş alanları bulunamadı!");
+            console.error("Hata: Input alanları bulunamadı!");
+            alert("Hata: Input alanları bulunamadı!");
             return;
         }
 
         var email = emailInput.value.trim().toLowerCase();
         var password = passwordInput.value.trim();
 
+        console.log("Okunan E-posta:", email);
+        console.log("Okunan Şifre:", password);
+
         if (email === 'admin@bizgeliyoruz.com' && password === '123456') {
+            console.log("Giriş başarılı! localStorage kaydediliyor ve sayfa yenileniyor...");
             localStorage.setItem('isAdminLoggedIn', 'true');
             if (loginScreen) {
                 loginScreen.style.display = 'none';
             }
             location.reload();
         } else {
+            console.warn("Hatalı giriş denemesi: E-posta veya şifre uyuşmuyor.");
             if (errorDiv) {
                 errorDiv.style.display = 'block';
             }
         }
     }
 
-    // 3. Çıkış Yap Fonksiyonu
+    // Çıkış Yap Fonksiyonu
     function adminLogout() {
         localStorage.removeItem('isAdminLoggedIn');
         location.reload();
